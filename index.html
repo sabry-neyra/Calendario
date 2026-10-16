@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Planner de cursada</title>
+<title>Calendario de cursada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#ECEFF5; --surface:#fff; --ink:#18202F; --muted:#667085; --line:#D9DEE8;
-  --accent:#3B47D9; --accent-soft:#E4E6FB;
+  --bg:#EAF2F5; --surface:#fff; --ink:#15303A; --muted:#5F7480; --line:#D3E1E7;
+  --accent:#378FAE; --accent-soft:#DCEEF4; --accent-ink:#216982;
+  --side2:#1F4857; --side3:#2A5C6E;
   --bad:#C8453F; --bad-soft:#F9E1DF;
   --ok:#B7791F; --ok-soft:#FBEFD2;
-  --pro:#1F7A5C; --pro-soft:#D9F0E6;
+  --pro:#2F8F4E; --pro-soft:#DDF1E3;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:"Bricolage Grotesque",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:260px 1fr;min-height:100vh}
@@ -23,18 +24,20 @@ button{cursor:pointer}
 aside{background:var(--ink);color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:24px}
 aside h1{font-size:20px;margin:0;font-weight:700}
 nav{display:flex;flex-direction:column;gap:4px}
-nav button{background:none;border:0;color:#B8C0D4;text-align:left;padding:10px 12px;border-radius:8px;font-size:15px}
-nav button[aria-selected=true]{background:#2A3550;color:#fff}
-.upcoming h2{font-size:13px;font-weight:500;color:#8E99B3;margin:0 0 8px}
+nav button{background:none;border:0;color:#A9C9D4;text-align:left;padding:10px 12px;border-radius:8px;font-size:15px}
+nav button[aria-selected=true]{background:var(--side3);color:#fff}
+.upcoming h2{font-size:13px;font-weight:500;color:#8FB6C3;margin:0 0 8px}
 .upcoming ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.upcoming li{background:#232D45;border-radius:8px;padding:8px 10px;font-size:13px}
+.upcoming li{background:var(--side2);border-radius:8px;padding:8px 10px;font-size:13px}
 .upcoming li b{display:block;font-weight:500}
-.upcoming li span{color:#9AA5BE}
-.upcoming .empty{color:#8E99B3;font-size:13px}
-.backup{margin-top:auto;display:flex;flex-direction:column;gap:6px}
-.backup h2{font-size:13px;font-weight:500;color:#8E99B3;margin:0 0 2px}
-.backup button{background:#232D45;border:0;color:#DDE3F2;border-radius:8px;padding:8px 10px;font-size:13px;text-align:left}
-.backup button:hover{background:#2A3550}
+.upcoming li span{color:#A3C3CE}
+.upcoming .empty{color:#8FB6C3;font-size:13px}
+.bottom{margin-top:auto;display:flex;flex-direction:column;gap:18px}
+.backup{display:flex;flex-direction:column;gap:6px}
+.backup span{font-size:12px;color:#A3C3CE;line-height:1.3;word-break:break-word}
+.backup h2{font-size:13px;font-weight:500;color:#8FB6C3;margin:0 0 2px}
+.backup button{background:var(--side2);border:0;color:#E3F1F6;border-radius:8px;padding:8px 10px;font-size:13px;text-align:left}
+.backup button:hover{background:var(--side3)}
 
 main{padding:28px;min-width:0}
 .bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
@@ -45,22 +48,22 @@ main{padding:28px;min-width:0}
 .btn.danger{color:var(--bad)}
 
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.dow{background:#F6F7FB;padding:8px;font-size:13px;color:var(--muted);text-align:center}
+.dow{background:#F2F7F9;padding:8px;font-size:13px;color:var(--muted);text-align:center}
 .day{background:var(--surface);min-height:104px;padding:6px;display:flex;flex-direction:column;gap:3px;cursor:pointer;text-align:left;border:0;border-radius:0}
-.day:hover{background:#F8F9FD}
-.day.out{background:#FAFBFD;color:#A4ABBB}
+.day:hover{background:#F5FAFC}
+.day.out{background:#F8FBFC;color:#9DB3BC}
 .day .n{font-size:13px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%}
 .day.today .n{background:var(--accent);color:#fff}
-.chip{font-size:12px;line-height:1.25;padding:2px 6px;border-radius:5px;background:var(--accent-soft);color:#2630A0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:3px solid var(--accent)}
+.chip{font-size:12px;line-height:1.25;padding:2px 6px;border-radius:5px;background:var(--accent-soft);color:#1B5A72;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:3px solid var(--accent)}
 .chip.bad{background:var(--bad-soft);color:#8E2A25;border-color:var(--bad)}
 .chip.ok{background:var(--ok-soft);color:#7A5010;border-color:var(--ok)}
-.chip.pro{background:var(--pro-soft);color:#14513C;border-color:var(--pro)}
+.chip.pro{background:var(--pro-soft);color:#1C5B31;border-color:var(--pro)}
 
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 
 dialog{border:0;border-radius:14px;padding:0;width:min(440px,92vw);box-shadow:0 20px 60px rgba(20,28,48,.3)}
-dialog::backdrop{background:rgba(24,32,47,.45)}
+dialog::backdrop{background:rgba(21,48,58,.45)}
 dialog form{padding:22px;display:grid;gap:12px}
 dialog h3{margin:0 0 4px;font-size:20px}
 label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
@@ -73,13 +76,13 @@ input,select,textarea{border:1px solid var(--line);border-radius:8px;padding:8px
 .mat-row select,.mat-row input{flex:1;min-width:0}
 dialog .box{padding:22px;display:grid;gap:12px}
 .mat-lista{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
-.mat-lista li{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F6F7FB;border-radius:8px;padding:8px 10px;font-size:15px;color:var(--ink)}
+.mat-lista li{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F2F7F9;border-radius:8px;padding:8px 10px;font-size:15px;color:var(--ink)}
 .mat-lista li.vacio-mat{color:var(--muted);justify-content:center}
 .mat-lista button{background:none;border:0;color:var(--muted);border-radius:6px;padding:2px 8px}
 .mat-lista button:hover{background:var(--bad-soft);color:var(--bad)}
 .badge.bad{display:block;background:var(--bad-soft);color:#8E2A25}
 .badge.ok{display:block;background:var(--ok-soft);color:#7A5010}
-.badge.pro{display:block;background:var(--pro-soft);color:#14513C}
+.badge.pro{display:block;background:var(--pro-soft);color:#1C5B31}
 
 .crumbs{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex:1;font-size:18px}
 .crumbs button{background:none;border:0;padding:2px 4px;border-radius:6px;font-weight:500}
@@ -94,7 +97,7 @@ dialog .box{padding:22px;display:grid;gap:12px}
 .item .meta{font-size:12px;color:var(--muted)}
 .item .x{position:absolute;top:8px;right:8px;background:none;border:0;color:var(--muted);font-size:16px;border-radius:6px;padding:2px 6px}
 .item .x:hover{background:var(--bad-soft);color:var(--bad)}
-.item a{color:var(--accent);font-size:13px}
+.item a{color:var(--accent-ink);font-size:13px}
 .vacio{grid-column:1/-1;color:var(--muted);padding:40px 0;text-align:center;border:1px dashed var(--line);border-radius:12px}
 .hidden{display:none}
 
@@ -121,13 +124,35 @@ dialog .box{padding:22px;display:grid;gap:12px}
     <h2>Pendientes próximos</h2>
     <ul id="upcoming"></ul>
   </div>
+  <div class="bottom">
+  <div class="backup">
+    <h2>Cuenta</h2>
+    <span id="cloudState">Sin sesión: tus datos están solo en este navegador</span>
+    <button type="button" id="loginBtn">Iniciar sesión / crear cuenta</button>
+    <button type="button" id="logoutBtn" class="hidden">Cerrar sesión</button>
+  </div>
   <div class="backup">
     <h2>Copia de seguridad</h2>
     <button type="button" id="exportBtn">Exportar todo</button>
     <button type="button" id="importBtn">Importar copia</button>
     <input type="file" id="importInput" accept=".json,application/json" hidden>
   </div>
+  </div>
 </aside>
+
+<dialog id="dlgLogin">
+  <div class="box">
+    <h3>Tu cuenta</h3>
+    <label>Email <input type="email" id="lg-email" autocomplete="email"></label>
+    <label>Contraseña (mínimo 6 caracteres) <input type="password" id="lg-pass" autocomplete="current-password"></label>
+    <div class="badge" id="lg-msg"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="lg-cancel">Cancelar</button>
+      <button type="button" class="btn" id="lg-signup">Crear cuenta</button>
+      <button type="button" class="btn primary" id="lg-signin">Entrar</button>
+    </div>
+  </div>
+</dialog>
 
 <main>
   <!-- CALENDARIO -->
@@ -218,7 +243,15 @@ dialog .box{padding:22px;display:grid;gap:12px}
   </div>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ---------- Configuración de la nube (Supabase) ---------- */
+// Pegá acá los datos de tu proyecto (Project Settings → API). Si los dejás así, la app funciona solo en local.
+const SUPABASE_URL = "https://atojflizaowvgajyibwk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_uo76RgQL0WhvhA9l4faVFA_yeKDEkTf";
+const sb = (SUPABASE_URL.startsWith("https://") && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+let user = null, cargadoNube = false, remotos = new Set(), tSync = null;
+
 /* ---------- Utilidades ---------- */
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
@@ -236,7 +269,7 @@ function estadoNota(n){
 /* ---------- Eventos (localStorage) ---------- */
 let eventos = [];
 try { eventos = JSON.parse(localStorage.getItem("planner-eventos") || "[]"); } catch(e){ eventos = []; }
-const guardarEventos = () => { try { localStorage.setItem("planner-eventos", JSON.stringify(eventos)); } catch(e){ alert("No se pudo guardar."); } };
+const guardarEventos = () => { try { localStorage.setItem("planner-eventos", JSON.stringify(eventos)); } catch(e){ alert("No se pudo guardar."); } programarSync(); };
 
 function claseEvento(ev){
   if (ev.tipo === "tp") return ev.estado === "entregado" ? "pro" : "ok";
@@ -304,7 +337,7 @@ let materias = [];
 try { materias = JSON.parse(localStorage.getItem("planner-materias") || "[]"); } catch(e){ materias = []; }
 // Si ya tenías eventos cargados, sus materias pasan a la lista automáticamente
 eventos.forEach(e => { if (e.materia && !materias.includes(e.materia)) materias.push(e.materia); });
-const guardarMaterias = () => { try { localStorage.setItem("planner-materias", JSON.stringify(materias)); } catch(e){ alert("No se pudo guardar."); } };
+const guardarMaterias = () => { try { localStorage.setItem("planner-materias", JSON.stringify(materias)); } catch(e){ alert("No se pudo guardar."); } programarSync(); };
 guardarMaterias();
 
 function llenarMaterias(sel){
@@ -404,6 +437,7 @@ async function cargarArchivos(){
   folders = await tx("folders", "readonly", s => s.getAll());
   files = await tx("files", "readonly", s => s.getAll());
   renderArch();
+  programarSync();
 }
 function tamano(b){ return b < 1024 ? b + " B" : b < 1048576 ? (b/1024).toFixed(0) + " KB" : (b/1048576).toFixed(1) + " MB"; }
 function renderArch(){
@@ -436,8 +470,14 @@ function renderArch(){
     d.innerHTML = '<span class="ico">📄</span><span class="name"></span><span class="meta"></span><a href="#">Abrir / descargar</a><button class="x" title="Eliminar archivo" aria-label="Eliminar archivo">✕</button>';
     d.querySelector(".name").textContent = fi.name;
     d.querySelector(".meta").textContent = tamano(fi.size);
-    d.querySelector("a").onclick = e => {
+    d.querySelector("a").onclick = async e => {
       e.preventDefault();
+      if (!fi.blob){
+        if (!sb || !user){ alert("Este archivo está en la nube. Iniciá sesión para descargarlo."); return; }
+        const {data, error} = await sb.storage.from("archivos").download(`${user.id}/${fi.id}`);
+        if (error){ alert("No se pudo descargar: " + error.message); return; }
+        fi.blob = data; await tx("files", "readwrite", s => s.put({...fi, blob: data}));
+      }
       const url = URL.createObjectURL(fi.blob);
       const a = document.createElement("a"); a.href = url; a.download = fi.name; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
@@ -462,6 +502,87 @@ $("fileInput").onchange = async e => {
     await tx("files", "readwrite", s => s.add({id: uid(), folderId: folderActual, name: f.name, size: f.size, type: f.type, blob: f}));
   e.target.value = ""; cargarArchivos();
 };
+
+/* ---------- Cuenta y nube (Supabase) ---------- */
+const estadoNube = t => { $("cloudState").textContent = t; };
+function uiCuenta(){
+  $("loginBtn").classList.toggle("hidden", !!user);
+  $("logoutBtn").classList.toggle("hidden", !user);
+  if (!user) estadoNube("Sin sesión: tus datos están solo en este navegador");
+}
+function programarSync(){
+  if (!sb || !user || !cargadoNube) return;
+  clearTimeout(tSync); estadoNube("Guardando…");
+  tSync = setTimeout(async () => {
+    try { await push(); estadoNube("Guardado en la nube · " + user.email); }
+    catch(e){ console.error(e); estadoNube("Error al guardar en la nube"); }
+  }, 800);
+}
+async function push(){
+  const fo = await tx("folders", "readonly", s => s.getAll());
+  const fl = await tx("files", "readonly", s => s.getAll());
+  for (const f of fl) if (f.blob && !f.subido){
+    const {error} = await sb.storage.from("archivos").upload(`${user.id}/${f.id}`, f.blob, {upsert: true, contentType: f.type || undefined});
+    if (error) throw error;
+    f.subido = true; await tx("files", "readwrite", s => s.put(f));
+  }
+  const actuales = new Set(fl.map(f => f.id));
+  const borrar = [...remotos].filter(id => !actuales.has(id)).map(id => `${user.id}/${id}`);
+  if (borrar.length) await sb.storage.from("archivos").remove(borrar);
+  remotos = actuales;
+  const data = {eventos, materias, folders: fo, files: fl.map(({id, folderId, name, size, type}) => ({id, folderId, name, size, type}))};
+  const {error} = await sb.from("datos").upsert({user_id: user.id, data, updated_at: new Date().toISOString()});
+  if (error) throw error;
+}
+async function pull(){
+  const {data: row, error} = await sb.from("datos").select("data").eq("user_id", user.id).maybeSingle();
+  if (error) throw error;
+  if (row){
+    const d = row.data || {};
+    eventos = d.eventos || []; materias = d.materias || [];
+    guardarEventos(); guardarMaterias();
+    const locales = new Map((await tx("files", "readonly", s => s.getAll())).map(f => [f.id, f]));
+    await tx("folders", "readwrite", s => s.clear());
+    await tx("files", "readwrite", s => s.clear());
+    for (const fo of d.folders || []) await tx("folders", "readwrite", s => s.put(fo));
+    for (const f of d.files || []) await tx("files", "readwrite", s => s.put({...f, blob: locales.get(f.id)?.blob || null, subido: true}));
+    remotos = new Set((d.files || []).map(f => f.id));
+  }
+  cargadoNube = true;
+  renderCal(); await cargarArchivos();
+  if (!row) await push(); // primera vez: sube lo que ya tenías en este navegador
+}
+function iniciarNube(){
+  $("loginBtn").onclick = () => {
+    if (!sb) return alert("Falta configurar Supabase: pegá SUPABASE_URL y SUPABASE_KEY al inicio del script.");
+    $("lg-msg").className = "badge"; $("dlgLogin").showModal();
+  };
+  $("lg-cancel").onclick = () => $("dlgLogin").close();
+  $("logoutBtn").onclick = async () => { await sb.auth.signOut(); };
+  const msg = (t, c) => { const m = $("lg-msg"); m.textContent = t; m.className = "badge " + c; };
+  const creds = () => ({email: $("lg-email").value.trim(), password: $("lg-pass").value});
+  $("lg-signin").onclick = async () => {
+    const {error} = await sb.auth.signInWithPassword(creds());
+    if (error) msg("No se pudo entrar: " + error.message, "bad"); else $("dlgLogin").close();
+  };
+  $("lg-signup").onclick = async () => {
+    const {data, error} = await sb.auth.signUp(creds());
+    if (error) return msg("No se pudo crear la cuenta: " + error.message, "bad");
+    if (data.session) $("dlgLogin").close();
+    else msg("Cuenta creada. Revisá tu mail para confirmarla y después tocá Entrar.", "pro");
+  };
+  sb.auth.onAuthStateChange((_ev, session) => {
+    const nuevo = session?.user || null;
+    if (nuevo?.id === user?.id) return;
+    user = nuevo; cargadoNube = false; uiCuenta();
+    if (!user) return;
+    setTimeout(async () => {
+      try { estadoNube("Sincronizando…"); await pull(); estadoNube("Sincronizado · " + user.email); }
+      catch(e){ console.error(e); estadoNube("Error al sincronizar con la nube"); }
+    }, 0);
+  });
+}
+if (sb) iniciarNube(); else $("loginBtn").onclick = () => alert("Falta configurar Supabase: pegá SUPABASE_URL y SUPABASE_KEY al inicio del script del index.html.");
 
 /* ---------- Copia de seguridad ---------- */
 const blobToDataURL = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
